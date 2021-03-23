@@ -3,11 +3,17 @@ function printIcons(wherePrint, icons){
   wherePrint.html("");
   icons.forEach((icon) => {
     const {name, prefix, family, color} = icon;
-    const html = `
-        <div>
-          <i class="${family} ${prefix}${name}" style="color: ${color}"></i>
-          <div class="title">${name}</div>
-        </div>`;
+    const html = `<div>
+                    <i class="${family} ${prefix}${name}" style="color: ${color}"></i>
+                    <div class="title">${name}</div>
+                  </div>`;
+    wherePrint.append(html);
+  });
+}
+
+function printOption(wherePrint, options){
+  options.forEach((item) => {
+    const html = `<option value="${item}">${item}</option>`;
     wherePrint.append(html);
   });
 }
@@ -64,18 +70,6 @@ const icons = [
     category: "food"
   },
   {
-    name: 'cocktail',
-    family: 'fas',
-    prefix: 'fa-',
-    category: "beverage"
-  },
-  {
-    name: 'horse',
-    family: 'fas',
-    prefix: 'fa-',
-    category: "animal"
-  },
-  {
     name: 'coffee',
     family: 'fas',
     prefix: 'fa-',
@@ -117,12 +111,6 @@ const icons = [
     prefix: 'fa-',
     category: "animal"
   },
-  {
-    name: 'hamburger',
-    family: 'fas',
-    prefix: 'fa-',
-    category: "food"
-  },
 ];
 const iconsContainer = $(".icons");
 
@@ -150,3 +138,16 @@ const iconsColored = icons.map((icon) => {
 printIcons(iconsContainer, iconsColored); //iconsContainer = $('.icons');
 
 // Milestone 3: Creiamo una select con i tipi di icone e usiamola per filtrare le icone
+const select = $("#type");
+printOption(select, categories);
+
+select.change(function() {
+  const optionSelected = $(this).val();
+  let iconsFiltered = iconsColored.filter((icon) => {
+    return icon.category == optionSelected;
+  });
+  if (iconsFiltered.length == 0) {
+    iconsFiltered = iconsColored;
+  }
+  printIcons(iconsContainer, iconsFiltered);
+});
